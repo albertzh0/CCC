@@ -1,0 +1,36 @@
+import java.util.Scanner;
+
+public class Trianglane {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the number of columns
+        int C = scanner.nextInt();
+        scanner.nextLine(); // Move to the next line
+
+        // Read the colors of the tiles
+        String firstRow = scanner.nextLine().trim();
+        String secondRow = scanner.nextLine().trim();
+
+        // Initialize tape length
+        int tapeLength = 0;
+
+        // Process the tiles
+        for (int i = 0; i < C; i++) {
+            // Check if the tile in the first row is wet
+            if (firstRow.charAt(i) == '1') {
+                tapeLength++;
+            }
+
+            // Check if the tile in the second row is wet
+            if (secondRow.charAt(i) == '1') {
+                tapeLength++;
+            }
+        }
+
+        // Print the result
+        System.out.println(tapeLength);
+
+        scanner.close();
+    }
+}
