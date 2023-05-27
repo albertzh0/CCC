@@ -1,0 +1,31 @@
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String seats = scanner.nextLine();
+        int minSwaps = minimumSwaps(seats);
+        System.out.println(minSwaps);
+    }
+
+    public static int minimumSwaps(String seats) {
+        int groupA = 0, groupB = 0, groupC = 0;
+        int groupASwaps = 0, groupBSwaps = 0, groupCSwaps = 0;
+
+        for (char seat : seats.toCharArray()) {
+            if (seat == 'A') {
+                groupA++;
+                groupASwaps += groupB + groupC;
+            } else if (seat == 'B') {
+                groupB++;
+                groupBSwaps += groupA + groupC;
+            } else if (seat == 'C') {
+                groupC++;
+                groupCSwaps += groupA + groupB;
+            }
+        }
+
+        int minSwaps = Math.min(groupASwaps, Math.min(groupBSwaps, groupCSwaps));
+        return minSwaps;
+    }
+}
