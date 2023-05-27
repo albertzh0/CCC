@@ -1,0 +1,49 @@
+import java.util.*;
+
+public class GoodSamples {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int M = scanner.nextInt();
+        long K = scanner.nextLong();
+
+        List<Integer> pitches = new ArrayList<>();
+        if (N > M || K > countPossibleSamples(N, M)) {
+            System.out.println(-1);
+        } else {
+            generatePiece(pitches, N, M, K);
+            for (int pitch : pitches) {
+                System.out.print(pitch + " ");
+            }
+        }
+    }
+
+    public static long countPossibleSamples(int N, int M) {
+        long count = 0;
+        for (int i = 1; i <= M; i++) {
+            count += Math.pow(M, N - i);
+        }
+        return count;
+    }
+
+    public static boolean generatePiece(List<Integer> pitches, int N, int M, long K) {
+        if (N == 0) {
+            return K == 0;
+        }
+
+        for (int i = 1; i <= M; i++) {
+            if (K <= Math.pow(M, N - 1)) {
+                pitches.add(i);
+                if (generatePiece(pitches, N - 1, M, K)) {
+                    return true;
+                }
+                pitches.remove(pitches.size() - 1);
+            } else {
+                K -= Math.pow(M, N - 1);
+            }
+        }
+
+        return false;
+    }
+}
