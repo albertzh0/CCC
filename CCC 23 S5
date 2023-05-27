@@ -1,0 +1,36 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class TheFilter {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        List<Integer> cantorSet = getCantorSet(N);
+        for (int num : cantorSet) {
+            System.out.print(num + " ");
+        }
+    }
+
+    public static List<Integer> getCantorSet(int N) {
+        List<Integer> cantorSet = new ArrayList<>();
+        getCantorSetHelper(N, 0, 1, cantorSet);
+        return cantorSet;
+    }
+
+    public static void getCantorSetHelper(int N, int start, int end, List<Integer> cantorSet) {
+        if (start > N || end > N) {
+            return;
+        }
+
+        if (start == end) {
+            cantorSet.add(start);
+            return;
+        }
+
+        int mid = (start + end) / 3;
+
+        getCantorSetHelper(N, start, mid, cantorSet);
+        getCantorSetHelper(N, mid + 1, end, cantorSet);
+    }
+}
