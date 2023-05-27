@@ -1,0 +1,81 @@
+import java.util.*;
+
+public class GoodInfluencers {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+
+        int[] A = new int[N - 1];
+        int[] B = new int[N - 1];
+        for (int i = 0; i < N - 1; i++) {
+            A[i] = scanner.nextInt();
+            B[i] = scanner.nextInt();
+        }
+
+        String intentions = scanner.next();
+
+        int[] costs = new int[N];
+        for (int i = 0; i < N; i++) {
+            costs[i] = scanner.nextInt();
+        }
+
+        int minCost = findMinCost(N, A, B, intentions, costs);
+        System.out.println(minCost);
+    }
+
+    public static int findMinCost(int N, int[] A, int[] B, String intentions, int[] costs) {
+        int[] degrees = new int[N + 1];
+        boolean[] visited = new boolean[N + 1];
+        int totalCost = 0;
+
+        for (int i = 0; i < N - 1; i++) {
+            degrees[A[i]]++;
+            degrees[B[i]]++;
+        }
+
+        for (int i = 1; i <= N; i++) {
+            if (intentions.charAt(i - 1) == 'Y') {
+                visited[i] = true;
+                totalCost += costs[i - 1];
+            }
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(degrees[a], degrees[b]));
+
+        for (int i = 1; i <= N; i++) {
+            if (visited[i]) {
+                for (int j = 0; j < N - 1; j++) {
+                    if (A[j] == i || B[j] == i) {
+                        int neighbor = (A[j] == i) ? B[j] : A[j];
+                        if (!visited[neighbor]) {
+                            degrees[neighbor]--;
+                        }
+                    }
+                }
+            } else {
+                pq.add(i);
+            }
+        }
+
+        while (!pq.isEmpty()) {
+            int student = pq.poll();
+            visited[student] = true;
+            totalCost += costs[student - 1];
+
+            for (int i = 0; i < N - 1; i++) {
+                if (A[i] == student || B[i] == student) {
+                    int neighbor = (A[i] == student) ? B[i] : A[i];
+                    if (!visited[neighbor]) {
+                        degrees[neighbor]--;
+                        if (degrees[neighbor] == 1) {
+                            pq.remove(neighbor);
+                        }
+                    }
+                }
+            }
+        }
+
+        return totalCost;
+    }
+}
