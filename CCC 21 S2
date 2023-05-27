@@ -1,0 +1,62 @@
+import java.util.*;
+
+public class ModernArt {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int M = scanner.nextInt();
+        int N = scanner.nextInt();
+        int K = scanner.nextInt();
+
+        boolean[][] canvas = new boolean[M][N];
+
+        for (int i = 0; i < K; i++) {
+            String choice = scanner.next();
+            int index = scanner.nextInt();
+
+            if (choice.equals("R")) {
+                runBrushAlongRow(canvas, index);
+            } else if (choice.equals("C")) {
+                runBrushAlongColumn(canvas, index);
+            }
+        }
+
+        int goldCells = countGoldCells(canvas);
+        System.out.println(goldCells);
+    }
+
+    public static void runBrushAlongRow(boolean[][] canvas, int row) {
+        int M = canvas.length;
+        int N = canvas[0].length;
+
+        for (int j = 0; j < N; j++) {
+            canvas[row - 1][j] = !canvas[row - 1][j];
+        }
+    }
+
+    public static void runBrushAlongColumn(boolean[][] canvas, int column) {
+        int M = canvas.length;
+        int N = canvas[0].length;
+
+        for (int i = 0; i < M; i++) {
+            canvas[i][column - 1] = !canvas[i][column - 1];
+        }
+    }
+
+    public static int countGoldCells(boolean[][] canvas) {
+        int M = canvas.length;
+        int N = canvas[0].length;
+
+        int goldCells = 0;
+
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (canvas[i][j]) {
+                    goldCells++;
+                }
+            }
+        }
+
+        return goldCells;
+    }
+}
