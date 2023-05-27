@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class GoodGroups {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int X = scanner.nextInt();
+        Set<String> sameGroup = new HashSet<>();
+        for (int i = 0; i < X; i++) {
+            String name1 = scanner.next();
+            String name2 = scanner.next();
+            sameGroup.add(name1 + " " + name2);
+        }
+
+        int Y = scanner.nextInt();
+        Set<String> differentGroup = new HashSet<>();
+        for (int i = 0; i < Y; i++) {
+            String name1 = scanner.next();
+            String name2 = scanner.next();
+            differentGroup.add(name1 + " " + name2);
+        }
+
+        int G = scanner.nextInt();
+        int violations = 0;
+        for (int i = 0; i < G; i++) {
+            String name1 = scanner.next();
+            String name2 = scanner.next();
+            String name3 = scanner.next();
+
+            if (violatesConstraint(sameGroup, name1, name2) ||
+                violatesConstraint(sameGroup, name1, name3) ||
+                violatesConstraint(sameGroup, name2, name3) ||
+                violatesConstraint(differentGroup, name1, name2) ||
+                violatesConstraint(differentGroup, name1, name3) ||
+                violatesConstraint(differentGroup, name2, name3)) {
+                violations++;
+            }
+        }
+
+        System.out.println(violations);
+    }
+
+    public static boolean violatesConstraint(Set<String> constraints, String name1, String name2) {
+        return constraints.contains(name1 + " " + name2) || constraints.contains(name2 + " " + name1);
+    }
+}
