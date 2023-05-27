@@ -1,0 +1,87 @@
+import java.util.*;
+
+public class DailyCommute {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int W = scanner.nextInt();
+        int D = scanner.nextInt();
+
+        List<List<Integer>> walkways = new ArrayList<>();
+
+        for (int i = 0; i < W; i++) {
+            int Ai = scanner.nextInt();
+            int Bi = scanner.nextInt();
+            walkways.add(Arrays.asList(Ai, Bi));
+        }
+
+        List<Integer> initialRoute = new ArrayList<>();
+        for (int i = 0; i < N; i++) {
+            initialRoute.add(scanner.nextInt());
+        }
+
+        List<List<Integer>> routeChanges = new ArrayList<>();
+
+        for (int i = 0; i < D; i++) {
+            int Xi = scanner.nextInt();
+            int Yi = scanner.nextInt();
+            routeChanges.add(Arrays.asList(Xi, Yi));
+        }
+
+        List<Integer> minTravelTimes = calculateMinTravelTimes(N, walkways, initialRoute, routeChanges);
+        for (int travelTime : minTravelTimes) {
+            System.out.print(travelTime + " ");
+        }
+    }
+
+    public static List<Integer> calculateMinTravelTimes(int N, List<List<Integer>> walkways,
+                                                       List<Integer> initialRoute, List<List<Integer>> routeChanges) {
+        List<Integer> minTravelTimes = new ArrayList<>();
+        int[] route = new int[N];
+        int[] distances = new int[N];
+        Arrays.fill(distances, Integer.MAX_VALUE);
+
+        for (List<Integer> walkway : walkways) {
+            int Ai = walkway.get(0) - 1;
+            int Bi = walkway.get(1) - 1;
+            distances[Bi] = Math.min(distances[Bi], 1);
+        }
+
+        route[0] = initialRoute.get(0) - 1;
+        for (int i = 1; i < N; i++) {
+            route[i] = initialRoute.get(i) - 1;
+            int distance = Math.abs(route[i] - route[i - 1]);
+            distances[route[i]] = Math.min(distances[route[i]], distance);
+        }
+
+        minTravelTimes.add(distances[N - 1]);
+
+        for (List<Integer> change : routeChanges) {
+            int Xi = change.get(0) - 1;
+            int Yi = change.get(1) - 1;
+
+            int temp = route[Xi];
+            route[Xi] = route[Yi];
+            route[Yi] = temp;
+
+            distances = new int[N];
+            Arrays.fill(distances, Integer.MAX_VALUE);
+
+            for (List<Integer> walkway : walkways) {
+                int Ai = walkway.get(0) - 1;
+                int Bi = walkway.get(1) - 1;
+                distances[Bi] = Math.min(distances[Bi], 1);
+            }
+
+            for (int i = 1; i < N; i++) {
+                int distance = Math.abs(route[i] - route[i - 1]);
+                distances[route[i]] = Math.min(distances[route[i]], distance);
+            }
+
+            minTravelTimes.add(distances[N - 1]);
+        }
+
+        return minTravelTimes;
+    }
+}
