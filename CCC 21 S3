@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class LunchConcert {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+
+        int[] positions = new int[N];
+        int[] walkingRates = new int[N];
+        int[] hearingDistances = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            positions[i] = scanner.nextInt();
+            walkingRates[i] = scanner.nextInt();
+            hearingDistances[i] = scanner.nextInt();
+        }
+
+        long minWalkingTime = calculateMinWalkingTime(positions, walkingRates, hearingDistances);
+        System.out.println(minWalkingTime);
+    }
+
+    public static long calculateMinWalkingTime(int[] positions, int[] walkingRates, int[] hearingDistances) {
+        int N = positions.length;
+
+        long minWalkingTime = Long.MAX_VALUE;
+
+        for (int i = 0; i < N; i++) {
+            int concertPosition = positions[i];
+
+            long walkingTime = 0;
+
+            for (int j = 0; j < N; j++) {
+                int friendPosition = positions[j];
+                int friendWalkingRate = walkingRates[j];
+                int friendHearingDistance = hearingDistances[j];
+
+                int distance = Math.abs(friendPosition - concertPosition);
+                int time = distance * friendWalkingRate;
+
+                if (distance <= friendHearingDistance) {
+                    walkingTime = Math.max(walkingTime, time);
+                }
+            }
+
+            minWalkingTime = Math.min(minWalkingTime, walkingTime);
+        }
+
+        return minWalkingTime;
+    }
+}
