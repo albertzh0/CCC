@@ -1,0 +1,51 @@
+import java.util.*;
+
+public class MathHomework {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int M = scanner.nextInt();
+
+        List<List<Integer>> requirements = new ArrayList<>();
+
+        for (int i = 0; i < M; i++) {
+            int Xi = scanner.nextInt();
+            int Yi = scanner.nextInt();
+            int Zi = scanner.nextInt();
+            requirements.add(Arrays.asList(Xi, Yi, Zi));
+        }
+
+        List<Integer> sequence = calculateSequence(N, requirements);
+
+        if (sequence == null) {
+            System.out.println("Impossible");
+        } else {
+            for (int num : sequence) {
+                System.out.print(num + " ");
+            }
+        }
+    }
+
+    public static List<Integer> calculateSequence(int N, List<List<Integer>> requirements) {
+        List<Integer> sequence = new ArrayList<>();
+
+        for (List<Integer> requirement : requirements) {
+            int Xi = requirement.get(0);
+            int Yi = requirement.get(1);
+            int Zi = requirement.get(2);
+
+            if (Zi < Xi || Zi > Yi) {
+                return null;
+            }
+
+            sequence.add(Zi);
+        }
+
+        for (int i = requirements.size(); i < N; i++) {
+            sequence.add(1);
+        }
+
+        return sequence;
+    }
+}
