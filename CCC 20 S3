@@ -1,27 +1,53 @@
-from collections import Counter
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
-def countDistinctPermutations(N, H):
-    needle_count = Counter(N)
-    haystack_count = Counter(H[:len(N)])
-    distinct_permutations = 0
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String N = scanner.nextLine();
+        String H = scanner.nextLine();
+        int result = countDistinctPermutations(N, H);
+        System.out.println(result);
+    }
 
-    if needle_count == haystack_count:
-        distinct_permutations += 1
+    public static int countDistinctPermutations(String N, String H) {
+        Map<Character, Integer> needleCount = new HashMap<>();
+        Map<Character, Integer> haystackCount = new HashMap<>();
+        int distinctPermutations = 0;
 
-    for i in range(len(N), len(H)):
-        haystack_count[H[i - len(N)]] -= 1
-        if haystack_count[H[i - len(N)]] == 0:
-            del haystack_count[H[i - len(N)]]
+        // Count characters in N
+        for (char c : N.toCharArray()) {
+            needleCount.put(c, needleCount.getOrDefault(c, 0) + 1);
+        }
 
-        haystack_count[H[i]] += 1
+        // Count characters in the first substring of H
+        for (int i = 0; i < N.length(); i++) {
+            char c = H.charAt(i);
+            haystackCount.put(c, haystackCount.getOrDefault(c, 0) + 1);
+        }
 
-        if needle_count == haystack_count:
-            distinct_permutations += 1
+        if (needleCount.equals(haystackCount)) {
+            distinctPermutations++;
+        }
 
-    return distinct_permutations
+        // Sliding window approach
+        for (int i = N.length(); i < H.length(); i++) {
+            char outChar = H.charAt(i - N.length());
+            char inChar = H.charAt(i);
 
-N = input().strip()
-H = input().strip()
+            // Update haystackCount
+            haystackCount.put(outChar, haystackCount.get(outChar) - 1);
+            if (haystackCount.get(outChar) == 0) {
+                haystackCount.remove(outChar);
+            }
+            haystackCount.put(inChar, haystackCount.getOrDefault(inChar, 0) + 1);
 
-result = countDistinctPermutations(N, H)
-print(result)
+            if (needleCount.equals(haystackCount)) {
+                distinctPermutations++;
+            }
+        }
+
+        return distinctPermutations;
+    }
+}
