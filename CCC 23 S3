@@ -1,0 +1,65 @@
+import java.util.Scanner;
+
+public class PalindromicPoster {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the input
+        int N = scanner.nextInt();
+        int M = scanner.nextInt();
+        int R = scanner.nextInt();
+        int C = scanner.nextInt();
+
+        // Check for impossible cases
+        if ((R == 0 && C > 0) || (R > 0 && C == 0) || R > N || C > M) {
+            System.out.println("IMPOSSIBLE");
+            return;
+        }
+
+        // Create the poster design
+        char[][] design = new char[N][M];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                design[i][j] = 'a';
+            }
+        }
+
+        // Modify the design to satisfy the conditions
+        for (int i = 0; i < R; i++) {
+            if (!isPalindrome(design[i])) {
+                makePalindrome(design[i]);
+            }
+        }
+        for (int j = 0; j < C; j++) {
+            char[] column = new char[N];
+            for (int i = 0; i < N; i++) {
+                column[i] = design[i][j];
+            }
+            if (!isPalindrome(column)) {
+                makePalindrome(column);
+                for (int i = 0; i < N; i++) {
+                    design[i][j] = column[i];
+                }
+            }
+        }
+
+        // Print the poster design
+        for (int i = 0; i < N; i++) {
+            System.out.println(design[i]);
+        }
+
+        scanner.close();
+    }
+
+    // Helper method to check if a char array is a palindrome
+    private static boolean isPalindrome(char[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left < right) {
+            if (arr[left] != arr[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
