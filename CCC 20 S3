@@ -1,0 +1,27 @@
+from collections import Counter
+
+def countDistinctPermutations(N, H):
+    needle_count = Counter(N)
+    haystack_count = Counter(H[:len(N)])
+    distinct_permutations = 0
+
+    if needle_count == haystack_count:
+        distinct_permutations += 1
+
+    for i in range(len(N), len(H)):
+        haystack_count[H[i - len(N)]] -= 1
+        if haystack_count[H[i - len(N)]] == 0:
+            del haystack_count[H[i - len(N)]]
+
+        haystack_count[H[i]] += 1
+
+        if needle_count == haystack_count:
+            distinct_permutations += 1
+
+    return distinct_permutations
+
+N = input().strip()
+H = input().strip()
+
+result = countDistinctPermutations(N, H)
+print(result)
