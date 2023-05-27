@@ -1,0 +1,69 @@
+import java.util.*;
+
+public class EscapeRoom {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int M = scanner.nextInt();
+        int N = scanner.nextInt();
+
+        int[][] room = new int[M][N];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                room[i][j] = scanner.nextInt();
+            }
+        }
+
+        boolean possible = isEscapePossible(room);
+        if (possible) {
+            System.out.println("yes");
+        } else {
+            System.out.println("no");
+        }
+    }
+
+    public static boolean isEscapePossible(int[][] room) {
+        int M = room.length;
+        int N = room[0].length;
+        boolean[][] visited = new boolean[M][N];
+
+        return dfs(room, visited, 0, 0);
+    }
+
+    public static boolean dfs(int[][] room, boolean[][] visited, int row, int col) {
+        int M = room.length;
+        int N = room[0].length;
+
+        if (row == M - 1 && col == N - 1) {
+            return true; // Reached the exit
+        }
+
+        visited[row][col] = true;
+
+        int value = room[row][col];
+        for (int i = 1; i * i <= value; i++) {
+            if (value % i == 0) {
+                int factor1 = i;
+                int factor2 = value / i;
+
+                if (isValidCell(row + factor1, col, M, N) && !visited[row + factor1][col]) {
+                    if (dfs(room, visited, row + factor1, col)) {
+                        return true;
+                    }
+                }
+
+                if (isValidCell(row, col + factor2, M, N) && !visited[row][col + factor2]) {
+                    if (dfs(room, visited, row, col + factor2)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isValidCell(int row, int col, int M, int N) {
+        return row >= 0 && row < M && col >= 0 && col < N;
+    }
+}
