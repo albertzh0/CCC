@@ -1,0 +1,52 @@
+import java.util.*;
+
+public class GoodTriplets {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        int C = scanner.nextInt();
+
+        int[] points = new int[N];
+        for (int i = 0; i < N; i++) {
+            points[i] = scanner.nextInt();
+        }
+
+        int count = countDistinctGoodTriplets(points, C);
+        System.out.println(count);
+    }
+
+    public static int countDistinctGoodTriplets(int[] points, int C) {
+        int count = 0;
+        int N = points.length;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = i + 1; j < N; j++) {
+                for (int k = j + 1; k < N; k++) {
+                    if (isGoodTriplet(points[i], points[j], points[k], C)) {
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public static boolean isGoodTriplet(int a, int b, int c, int C) {
+        int clockwiseDist = (C + a - c) % C;
+        int counterClockwiseDist = (C + c - a) % C;
+
+        if (clockwiseDist < counterClockwiseDist) {
+            int temp = clockwiseDist;
+            clockwiseDist = counterClockwiseDist;
+            counterClockwiseDist = temp;
+        }
+
+        if (b > a && b < c) {
+            return counterClockwiseDist < b && b < clockwiseDist;
+        } else {
+            return !(clockwiseDist < b && b < counterClockwiseDist);
+        }
+    }
+}
