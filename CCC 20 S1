@@ -1,0 +1,49 @@
+import java.util.*;
+
+public class SprinterSpeed {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt();
+        List<Point> observations = new ArrayList<>();
+
+        for (int i = 0; i < N; i++) {
+            int T = scanner.nextInt();
+            int X = scanner.nextInt();
+            observations.add(new Point(T, X));
+        }
+
+        double speed = calculateMinimumSpeed(observations);
+        System.out.println(speed);
+    }
+
+    public static double calculateMinimumSpeed(List<Point> observations) {
+        double minimumSpeed = 0.0;
+
+        for (int i = 1; i < observations.size(); i++) {
+            Point prev = observations.get(i - 1);
+            Point curr = observations.get(i);
+
+            int timeDiff = curr.time - prev.time;
+            int distanceDiff = Math.abs(curr.position - prev.position);
+
+            double speed = (double) distanceDiff / timeDiff;
+
+            if (speed > minimumSpeed) {
+                minimumSpeed = speed;
+            }
+        }
+
+        return minimumSpeed;
+    }
+
+    static class Point {
+        int time;
+        int position;
+
+        public Point(int time, int position) {
+            this.time = time;
+            this.position = position;
+        }
+    }
+}
