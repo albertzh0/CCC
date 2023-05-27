@@ -1,0 +1,96 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
+public class MinimumCostRoads {
+    static class Edge {
+        int destination;
+        int length;
+        int cost;
+
+        public Edge(int destination, int length, int cost) {
+            this.destination = destination;
+            this.length = length;
+            this.cost = cost;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Read the input
+        int N = scanner.nextInt();
+        int M = scanner.nextInt();
+
+        // Create adjacency list representation of the graph
+        List<Edge>[] graph = new List[N + 1];
+        for (int i = 1; i <= N; i++) {
+            graph[i] = new ArrayList<>();
+        }
+
+        for (int i = 0; i < M; i++) {
+            int u = scanner.nextInt();
+            int v = scanner.nextInt();
+            int length = scanner.nextInt();
+            int cost = scanner.nextInt();
+
+            // Add edges to the graph
+            graph[u].add(new Edge(v, length, cost));
+            graph[v].add(new Edge(u, length, cost));
+        }
+
+        // Find the minimum cost road plan
+        int minCost = findMinimumCost(graph);
+
+        // Print the minimum cost
+        System.out.println(minCost);
+
+        scanner.close();
+    }
+
+    private static int findMinimumCost(List<Edge>[] graph) {
+        int N = graph.length - 1;
+        int[] distance = new int[N + 1];
+        Arrays.fill(distance, Integer.MAX_VALUE);
+        distance[1] = 0;
+
+        PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> a.length - b.length);
+        pq.offer(new Edge(1, 0, 0));
+
+        while (!pq.isEmpty()) {
+            Edge curr = pq.poll();
+            int u = curr.destination;
+
+            if (curr.length > distance[u]) {
+                continue;
+            }
+
+            for (Edge neighbor : graph[u]) {
+                int v = neighbor.destination;
+                int newDistance = distance[u] + neighbor.length;
+
+                if (newDistance < distance[v]) {
+                    distance[v] = newDistance;
+                    pq.offer(new Edge(v, newDistance, neighbor.cost));
+                }
+            }
+        }
+
+        int minCost = 0;
+
+        for (int u = 1; u <= N; u++) {
+            for (Edge edge : graph[u]) {
+                int v = edge.destination;
+                int length = edge.length;
+                int cost = edge.cost;
+
+                if (distance[u] + length < distance[v]) {
+                    minCost += cost;
+                }
+            }
+        }
+
+        return minCost;
+    }
+}
